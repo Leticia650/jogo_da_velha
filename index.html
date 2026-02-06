@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo da Velha</title>
+  <style>
+    body {
+  background: #0f0f0f;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tabuleiro {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  gap: 6px;
+  margin: 20px 0;
+}
+
+.casa {
+  width: 100px;
+  height: 100px;
+  background: #1f1f1f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.casa:hover {
+  background: #2a2a2a;
+}
+
+/* cores dos jogadores */
+.casa.x {
+  color: #4da3ff; /* azul */
+}
+
+.casa.o {
+  color: #ff6b6b; /* vermelho */
+}
+
+h1{
+    color: aquamarine;
+}
+
+button {
+    border-radius: 10px;
+    background-color: aquamarine;
+    color: #0f0f0f;
+    font-weight: bolder;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+button:hover{
+    background-color: rgb(116, 240, 161);
+}
+
+  </style>
+</head>
+<body>
+
+  <h1>Jogo da Velha</h1>
+
+  <div class="tabuleiro" id="tabuleiro"></div>
+
+  <p id="status"></p>
+
+  <button id="reset">Reiniciar</button>
+
+  <script>
+
+    const tabuleiroEl = document.getElementById("tabuleiro");
+const statusEl = document.getElementById("status");
+const resetBtn = document.getElementById("reset");
+
+let tabuleiro = Array(9).fill(null);
+let turno = 0;
+let jogoAtivo = true;
+
+const jogadores = ["X", "O"];
+
+const vitorias = [
+  [0,1,2],[3,4,5],[6,7,8],
+  [0,3,6],[1,4,7],[2,5,8],
+  [0,4,8],[2,4,6]
+];
+
+const jogadorAtual = () => jogadores[turno % 2];
+
+const verificarVitoria = (jogador) =>
+  vitorias.some(combo =>
+    combo.every(pos => tabuleiro[pos] === jogador)
+  );
+
+const criarTabuleiro = () => {
+  tabuleiroEl.innerHTML = "";
+
+  tabuleiro.forEach((_, i) => {
+    const casa = document.createElement("div");
+    casa.classList.add("casa");
+    casa.dataset.index = i;
+    casa.addEventListener("click", cliqueCasa);
+    tabuleiroEl.appendChild(casa);
+  });
+};
+
+const cliqueCasa = (e) => {
+  const index = e.target.dataset.index;
+
+  if (!jogoAtivo || tabuleiro[index]) return;
+
+  const jogador = jogadorAtual();
+
+  tabuleiro[index] = jogador;
+  e.target.textContent = jogador;
+  e.target.classList.add(jogador.toLowerCase());
+
+  const venceu = verificarVitoria(jogador);
+  const empate = tabuleiro.every(c => c !== null);
+
+  [
+    () => {
+      statusEl.textContent = `Jogador ${jogador} venceu! 🎉`;
+      jogoAtivo = false;
+    },
+    () => {
+      statusEl.textContent = "Deu Velha! 😮‍💨";
+      jogoAtivo = false;
+    },
+    () => {
+      turno++;
+      statusEl.textContent = `Vez do jogador ${jogadorAtual()}`;
+    }
+  ][venceu ? 0 : empate ? 1 : 2]();
+};
+
+resetBtn.addEventListener("click", () => {
+  tabuleiro = Array(9).fill(null);
+  turno = 0;
+  jogoAtivo = true;
+  statusEl.textContent = "Vez do jogador X";
+  criarTabuleiro();
+});
+
+criarTabuleiro();
+statusEl.textContent = "Vez do jogador X";
+
+  </script>
+</body>
+</html>
