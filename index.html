@@ -11,6 +11,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+    overflow: hidden; /* 🚫 sem scroll */
+
 }
 
 .tabuleiro {
@@ -65,10 +67,11 @@ button:hover{
 footer{
   width: 100%;
   padding: 10px;
-  margin-top: 10px;
+  margin-top: 20px;
   text-align: center;
   color: #fff;
   background-color: #74f0a186;
+  font-size: small;
 
 }
 
@@ -174,7 +177,7 @@ statusEl.textContent = "Vez do jogador X";
   </script>
 
   <footer>
-    Site criado por <a href="https://leticia-marcolino.vercel.app/" target="_blank"> Letícia Marcolino</a>
+    Site criado por <a href="https://leticia-marcolino.vercel.app/" target="_blank"> <strong>Letícia Marcolino</strong></a>
   </footer>
 </body>
 </html>
